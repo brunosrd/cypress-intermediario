@@ -1,4 +1,4 @@
-ypress.Commands.add('login', (
+Cypress.Commands.add('login', (
   user = Cypress.env('user_name'),
   password = Cypress.env('user_password'),
   { cacheSession = true } = {},
@@ -11,8 +11,15 @@ ypress.Commands.add('login', (
     cy.get("[data-qa-selector='sign_in_button']").click()
   }
 
+  const validate = () => {
+    cy.visit('/')
+    cy.location('pathname', { timeout: 1000 })
+      .should('not.eq', '/users/sign_in')
+  }
+
   const options = {
     cacheAcrossSpecs: true,
+    validate,
   }
 
   if (cacheSession) {
@@ -21,6 +28,7 @@ ypress.Commands.add('login', (
     login()
   }
 })
+
   
   Cypress.Commands.add('logout', () => {
     cy.get('.qa-user-avatar').click()
